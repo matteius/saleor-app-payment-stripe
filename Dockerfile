@@ -8,11 +8,12 @@ WORKDIR /app
 
 # Copy necessary files for installation
 COPY package.json pnpm-lock.yaml ./
-COPY codegen.ts ./  # Add this line to copy the GraphQL Codegen config file
 
 # Get PNPM version from package.json
 RUN export PNPM_VERSION=$(cat package.json | jq '.engines.pnpm' | sed -E 's/[^0-9.]//g')
 RUN yarn global add pnpm@$PNPM_VERSION
+
+# Install ALL dependencies, including devDependencies
 RUN pnpm i --frozen-lockfile --prefer-offline
 
 # Build the app
@@ -25,6 +26,8 @@ ARG NEXT_PUBLIC_SALEOR_API_URL
 ENV NEXT_PUBLIC_SALEOR_API_URL=${NEXT_PUBLIC_SALEOR_API_URL:-https://api.opensensor.wiki/graphql/}
 ARG NEXT_PUBLIC_STOREFRONT_URL
 ENV NEXT_PUBLIC_STOREFRONT_URL=${NEXT_PUBLIC_STOREFRONT_URL:-https://www.opensensor.wiki/}
+
+# Run the build script
 RUN pnpm build
 
 # Production image, copy all the files and run next
@@ -49,3 +52,4 @@ USER nextjs
 EXPOSE 3010
 
 CMD ["node", "server.js"]
+
