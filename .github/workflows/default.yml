@@ -37,6 +37,6 @@ jobs:
       - name: Build saleor Stripe app; Publishes Image to Container Registry
         uses: ./.github/workflows/build_stripe_app
         with:
-          dockerfile: ../Dockerfile
+          dockerfile: Dockerfile
           image_path: whitewhale/saleor-stripe-app
 

@@ -19,7 +19,7 @@ inputs:
   docker_build_context:
     description: The docker build context (usually '.')
     required: false
-    default: 'saleor-app-payment-stripe'
+    default: '.'
 
 outputs:
   image_url:
