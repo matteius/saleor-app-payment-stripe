@@ -20,6 +20,8 @@ RUN pnpm i --frozen-lockfile --prefer-offline
 FROM deps AS builder
 WORKDIR /app
 COPY . .
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NEXT_OUTPUT=standalone
 ARG NEXT_PUBLIC_SALEOR_API_URL
