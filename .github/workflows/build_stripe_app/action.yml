@@ -46,6 +46,7 @@ runs:
       shell: bash
       run: |
         SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-${{ inputs.sha_size }})
+        SECRET_KEY=${{ inputs.SECRET_KEY }}
         echo "::set-output name=sha::${{ steps.image_url.outputs.value }}:$SHORT_SHA"
         echo "::set-output name=latest::${{ steps.image_url.outputs.value }}:latest"
     - name: Build image
