@@ -55,6 +55,7 @@ runs:
       run: >
         docker build ${{ inputs.docker_build_context }}
         -f ${{ inputs.dockerfile }}
+        --build-arg SECRET_KEY=${{ inputs.SECRET_KEY }}
         -t ${{ steps.image_tags.outputs.sha }}
         -t ${{ steps.image_tags.outputs.latest }}
 
