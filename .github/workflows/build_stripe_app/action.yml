@@ -15,11 +15,11 @@ inputs:
   dockerfile:
     description: The path + name of the Dockerfile you want to build (-f flag)
     required: false
-    default: '../Dockerfile.saleor'
+    default: 'Dockerfile'
   docker_build_context:
     description: The docker build context (usually '.')
     required: false
-    default: '.'
+    default: 'saleor-app-payment-stripe'
 
 outputs:
   image_url:
@@ -46,7 +46,7 @@ runs:
         echo "::set-output name=latest::${{ steps.image_url.outputs.value }}:latest"
     - name: Build image
       shell: bash
-      working-directory: saleor
+      working-directory: .
       run: >
         docker build ${{ inputs.docker_build_context }}
         -f ${{ inputs.dockerfile }}
