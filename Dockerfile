@@ -6,52 +6,46 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat jq
 WORKDIR /app
 
-# Get PNPM version from package.json
-
+# Copy necessary files for installation
 COPY package.json pnpm-lock.yaml ./
+COPY codegen.ts ./  # Add this line to copy the GraphQL Codegen config file
+
+# Get PNPM version from package.json
 RUN export PNPM_VERSION=$(cat package.json | jq '.engines.pnpm' | sed -E 's/[^0-9.]//g')
 RUN yarn global add pnpm@$PNPM_VERSION
 RUN pnpm i --frozen-lockfile --prefer-offline
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
-
+# Build the app
+FROM deps AS builder
+WORKDIR /app
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED 1
 ENV NEXT_OUTPUT=standalone
 ARG NEXT_PUBLIC_SALEOR_API_URL
 ENV NEXT_PUBLIC_SALEOR_API_URL=${NEXT_PUBLIC_SALEOR_API_URL:-https://api.opensensor.wiki/graphql/}
 ARG NEXT_PUBLIC_STOREFRONT_URL
 ENV NEXT_PUBLIC_STOREFRONT_URL=${NEXT_PUBLIC_STOREFRONT_URL:-https://www.opensensor.wiki/}
-
 RUN pnpm build
 
 # Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
-
-
 ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# COPY --from=builder /app/public ./public
+# Copy built assets from builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 # Set the correct permission for prerender cache
-#RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-#COPY --chown=nextjs:nodejs /app/.next/standalone ./
-#COPY --chown=nextjs:nodejs /app/.next/static ./.next/static
+RUN chown -R nextjs:nodejs .next
 
 USER nextjs
 
+EXPOSE 3010
 
-#CMD ["node", "server.js"]
-RUN pnpm run build
-CMD PORT=3010 pnpm run start
-
+CMD ["node", "server.js"]
