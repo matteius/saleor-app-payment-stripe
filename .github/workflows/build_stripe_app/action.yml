@@ -22,7 +22,7 @@ inputs:
     default: "."
   SECRET_KEY:
     description: The secret key
-    required: false
+    required: true
     default: ""
 
 outputs:
