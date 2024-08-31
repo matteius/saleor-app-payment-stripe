@@ -1,8 +1,8 @@
 name: Build saleor stripe app
 description: Build saleor Docker Image and Publish to DigitalOcean Container Registry
 branding:
-  icon: 'upload-cloud'
-  color: 'blue'
+  icon: "upload-cloud"
+  color: "blue"
 
 inputs:
   image_path:
@@ -11,22 +11,26 @@ inputs:
   sha_size:
     description: Number of characters from the commit SHA
     required: false
-    default: '8'
+    default: "8"
   dockerfile:
     description: The path + name of the Dockerfile you want to build (-f flag)
     required: false
-    default: 'Dockerfile'
+    default: "Dockerfile"
   docker_build_context:
     description: The docker build context (usually '.')
     required: false
-    default: '.'
+    default: "."
+  SECRET_KEY:
+    description: The secret key
+    required: false
+    default: ""
 
 outputs:
   image_url:
-    description: 'Url of the uploaded image with the SHA tag'
+    description: "Url of the uploaded image with the SHA tag"
     value: ${{ steps.image_tags.outputs.sha }}
   image_latest_url:
-    description: 'Url of the uploaded image with the latest tag'
+    description: "Url of the uploaded image with the latest tag"
     value: ${{ steps.image_tags.outputs.latest }}
 
 runs:
