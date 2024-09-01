@@ -59,5 +59,6 @@ export const env = createEnv({
     REST_APL_ENDPOINT: process.env.REST_APL_ENDPOINT,
     REST_APL_TOKEN: process.env.REST_APL_TOKEN,
     ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
+    REDIS_URL: process.env.REDIS_URL,
   },
 });
