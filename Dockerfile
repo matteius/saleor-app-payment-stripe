@@ -51,7 +51,5 @@ RUN chown -R nextjs:nodejs .next
 
 USER nextjs
 
-EXPOSE 3010
-
-CMD ["node", "server.js"]
+CMD PORT=3010 pnpm run start
 
