@@ -20,6 +20,8 @@ RUN pnpm i --frozen-lockfile --prefer-offline
 FROM deps AS builder
 WORKDIR /app
 COPY . .
+ARG REDIS_URL
+ENV REDIS_URL=${REDIS_URL}
 ARG SECRET_KEY
 ENV SECRET_KEY=${SECRET_KEY}
 ENV NEXT_TELEMETRY_DISABLED 1
