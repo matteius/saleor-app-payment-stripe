@@ -1,23 +1,27 @@
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
-import { FileAPL, UpstashAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { FileAPL, UpstashAPL, SaleorCloudAPL, type APL } from "@saleor/app-sdk/APL";
+import { RedisAPL } from "./apl";
 import { invariant } from "./lib/invariant";
 import { env } from "./lib/env.mjs";
 import { isTest } from "./lib/isEnv";
 
-/**
- * By default auth data are stored in the `.auth-data.json` (FileAPL).
- * For multi-tenant applications and deployments please use UpstashAPL.
- *
- * To read more about storing auth data, read the
- * [APL documentation](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
- */
-const getApl = async () => {
+// Define an interface for the dynamic import
+interface TestAPLModule {
+  TestAPL: new () => APL;
+}
+
+const getApl = async (): Promise<APL> => {
   if (isTest()) {
-    const { TestAPL } = await import("./__tests__/testAPL");
-    return new TestAPL();
+    const testModule = (await import("./__tests__/testAPL")) as TestAPLModule;
+    return new testModule.TestAPL();
   }
   /* c8 ignore start */
   switch (env.APL) {
+    case "redis":
+      invariant(env.REDIS_URL, "Missing REDIS_URL env variable!");
+      return new RedisAPL({
+        url: env.REDIS_URL as string,
+      });
     case "upstash":
       invariant(env.UPSTASH_URL, "Missing UPSTASH_URL env variable!");
       invariant(env.UPSTASH_TOKEN, "Missing UPSTASH_TOKEN env variable!");
