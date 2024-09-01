@@ -10,15 +10,19 @@ interface TestAPLModule {
   TestAPL: new () => APL;
 }
 
+// Extend the APL type to include "redis"
+type ExtendedAPLType = "saleor-cloud" | "upstash" | "file" | "redis";
+
 const getApl = async (): Promise<APL> => {
   if (isTest()) {
     const testModule = (await import("./__tests__/testAPL")) as TestAPLModule;
     return new testModule.TestAPL();
   }
   /* c8 ignore start */
-  switch (env.APL) {
+  switch (env.APL as ExtendedAPLType) {
     case "redis":
       invariant(env.REDIS_URL, "Missing REDIS_URL env variable!");
+      invariant(typeof env.REDIS_URL === "string", "REDIS_URL must be a string!");
       return new RedisAPL({
         url: env.REDIS_URL as string,
       });
