@@ -41,3 +41,4 @@ jobs:
           image_path: whitewhale/saleor-stripe-app
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
+          APP_LOG_LEVEL: debug

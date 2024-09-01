@@ -24,6 +24,14 @@ inputs:
     description: The secret key
     required: true
     default: ""
+  REDIS_URL:
+    description: The Redis URL
+    required: true
+    default: ""
+  APP_LOG_LEVEL:
+    description: Thelog level
+    required: false
+    default: "info"
 
 outputs:
   image_url:
@@ -57,6 +65,7 @@ runs:
         -f ${{ inputs.dockerfile }}
         --build-arg SECRET_KEY=${{ inputs.SECRET_KEY }}
         --build-arg REDIS_URL=${{ inputs.REDIS_URL }}
+        --build-arg APP_LOG_LEVEL=${{ inputs.APP_LOG_LEVEL }}
         -t ${{ steps.image_tags.outputs.sha }}
         -t ${{ steps.image_tags.outputs.latest }}
 

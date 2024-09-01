@@ -20,6 +20,8 @@ RUN pnpm i --frozen-lockfile --prefer-offline
 FROM deps AS builder
 WORKDIR /app
 COPY . .
+ARG APP_LOG_LEVEL
+ENV APP_LOG_LEVEL=${APP_LOG_LEVEL}
 ARG REDIS_URL
 ENV REDIS_URL=${REDIS_URL}
 ARG SECRET_KEY
