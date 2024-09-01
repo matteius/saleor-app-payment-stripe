@@ -22,9 +22,8 @@ const getApl = async (): Promise<APL> => {
   switch (env.APL as ExtendedAPLType) {
     case "redis":
       invariant(env.REDIS_URL, "Missing REDIS_URL env variable!");
-      invariant(typeof env.REDIS_URL === "string", "REDIS_URL must be a string!");
       return new RedisAPL({
-        url: env.REDIS_URL as string,
+        url: env.REDIS_URL,
       });
     case "upstash":
       invariant(env.UPSTASH_URL, "Missing UPSTASH_URL env variable!");
