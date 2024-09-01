@@ -12,7 +12,7 @@ export const env = createEnv({
     ENV: z.enum(["development", "test", "staging", "production"]).default("development"),
     SECRET_KEY: z.string().min(8, { message: "Cannot be too short" }),
     SENTRY_DSN: z.string().min(1).optional(),
-    APL: z.enum(["saleor-cloud", "upstash", "file"]).optional().default("file"),
+    APL: z.enum(["saleor-cloud", "upstash", "redis", "file"]).optional().default("file"),
     CI: z.coerce.boolean().optional().default(false),
     APP_DEBUG: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
