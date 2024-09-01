@@ -56,6 +56,7 @@ runs:
         docker build ${{ inputs.docker_build_context }}
         -f ${{ inputs.dockerfile }}
         --build-arg SECRET_KEY=${{ inputs.SECRET_KEY }}
+        --build-arg REDIS_URL=${{ inputs.REDIS_URL }}
         -t ${{ steps.image_tags.outputs.sha }}
         -t ${{ steps.image_tags.outputs.latest }}
 
