@@ -40,7 +40,7 @@ export class RedisAPL implements APL {
   }
 
   private prepareAuthDataKey(apiUrl: string): string {
-    return `APP_ID:${apiUrl}`; // Replace APP_ID with actual app ID or make it configurable
+    return `APP_STRIPE:${apiUrl}`;
   }
 
   async get(saleorApiUrl: string): Promise<AuthData | undefined> {
